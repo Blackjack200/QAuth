@@ -1,0 +1,6 @@
+name: QAuth
+version: 0.0.1
+api: 1.0.0
+main: com.github.blackjack200.QAuthLoader
+author: Blackjack200
+website: https://github.com/Blackjack200/QAuth
