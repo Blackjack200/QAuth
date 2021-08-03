@@ -13,7 +13,7 @@ import java.security.SecureRandom;
 import java.util.function.Consumer;
 
 public class DefaultListener implements Listener {
-	@Blame(blame = "NUKKIT FUCK YOU")
+	@Blame
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerLocallyInitialized(PlayerLocallyInitializedEvent event) {
 		final Player player = event.getPlayer();
@@ -29,22 +29,18 @@ public class DefaultListener implements Listener {
 						code = Integer.toString(rand.nextInt(Integer.MAX_VALUE));
 					}
 					String finalCode = code;
-					Consumer<Void> success = (val) -> {
-						player.kick(QAuthLoader.getKickMessage().replace("[CODE]", finalCode).replace("[NAME]", name), false);
-					};
+					Consumer<Void> success = (val) -> player.kick(QAuthLoader.getKickMessage()
+							.replace("[验证码]", finalCode)
+							.replace("[名字]", name)
+							.replace("[有效时间]", Long.toString(QAuthLoader.getTimeout())), false);
 					if (set) {
-						RedisWrapper.setAuthCode(name, code, QAuthLoader.getTimeout()).onFulfill((unused) -> {
-							success.accept(null);
-						}).start();
+						RedisWrapper.setAuthCode(name, code, QAuthLoader.getTimeout())
+								.onFulfill((unused) -> success.accept(null)).start();
 					} else {
 						success.accept(null);
 					}
 				}).start();
 			}
 		}).start();
-	}
-
-	private void handle(Player player, String code) {
-
 	}
 }

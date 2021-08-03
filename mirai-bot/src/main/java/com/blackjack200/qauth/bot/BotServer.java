@@ -91,7 +91,7 @@ public class BotServer {
 				String msg = e.getMessage().contentToString();
 				if (msg.startsWith("/")) {
 					ArrayList<String> parts = parseArguments(msg.substring(1));
-					if ("verify".equals(parts.get(0))) {
+					if ("验证".equals(parts.get(0))) {
 						final Group subject = e.getSubject();
 						if (parts.size() == 3) {
 							String name = parts.get(1);
@@ -99,22 +99,22 @@ public class BotServer {
 							final Jedis jedis = GlobalJedisConfig.newJedis();
 							Objects.requireNonNull(jedis);
 							String actualCode = RedisImpl.getAuthCodeImpl(name, jedis);
-							jedis.resetState();
+
 
 							if (actualCode != null) {
 								if (actualCode.equals(code) && RedisImpl.bindAccountImpl(name, e.getSender().getId(), jedis)) {
-									subject.sendMessage(String.format("Authorization to %s success", name));
-									jedis.resetState();
+									subject.sendMessage(String.format("玩家 %s 验证成功", name));
+
 									RedisImpl.removeAuthCodeImpl(name, jedis);
 								} else {
-									subject.sendMessage(String.format("Authorization to %s failed(code invalid)", name));
+									subject.sendMessage(String.format("玩家 %s 验证失败(验证码无效)", name));
 								}
 							} else {
-								subject.sendMessage(String.format("Authorization to %s failed(player not exists)", name));
+								subject.sendMessage(String.format("玩家 %s 验证失败(验证码不存在)", name));
 							}
 							jedis.close();
 						} else {
-							subject.sendMessage("Usage: /verify <name> <code>");
+							subject.sendMessage("用法: /验证 <游戏ID> <验证码>");
 						}
 					}
 				}
