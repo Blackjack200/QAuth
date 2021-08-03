@@ -1,18 +1,22 @@
 package com.blackjack200.qauth.bot;
 
-import com.github.blackjack200.GlobalJedisConfig;
-import com.github.blackjack200.RedisWrapper;
+import com.github.blackjack200.qauth.qauth.GlobalJedisConfig;
+import com.github.blackjack200.qauth.qauth.RedisImpl;
 import lombok.Getter;
 import net.mamoe.mirai.Bot;
+import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.event.events.BotOfflineEvent;
 import net.mamoe.mirai.event.events.BotOnlineEvent;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.utils.MiraiLogger;
+import redis.clients.jedis.Jedis;
 
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class BotServer {
 	private static BotServer server;
@@ -30,7 +34,13 @@ public class BotServer {
 		this.path = path;
 		server = this;
 		this.logger = MiraiLogger.create("Server");
-		this.pool = Executors.newFixedThreadPool(8);
+		int count = Runtime.getRuntime().availableProcessors();
+		this.pool = new ThreadPoolExecutor(count, count, 0L,
+				TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), (r) -> {
+			Thread thread = new Thread(r);
+			thread.setName("BotServer-Executor");
+			return thread;
+		});
 	}
 
 	public static BotServer getInstance() {
@@ -76,33 +86,44 @@ public class BotServer {
 			this.bot.getConfiguration().noBotLog();
 		});
 
-		this.bot.getEventChannel().subscribeAlways(GroupMessageEvent.class, (final GroupMessageEvent e) -> {
-			pool.execute(() -> {
-				if (e.getGroup().getId() == this.group) {
-					String msg = e.getMessage().contentToString();
-					if (msg.startsWith("/")) {
-						ArrayList<String> parts = parseArguments(msg.substring(1));
-						if ("verify".equals(parts.get(0)) && parts.size() == 3) {
+		this.bot.getEventChannel().subscribeAlways(GroupMessageEvent.class, (final GroupMessageEvent e) -> pool.execute(() -> {
+			if (e.getGroup().getId() == this.group) {
+				String msg = e.getMessage().contentToString();
+				if (msg.startsWith("/")) {
+					ArrayList<String> parts = parseArguments(msg.substring(1));
+					if ("verify".equals(parts.get(0))) {
+						final Group subject = e.getSubject();
+						if (parts.size() == 3) {
 							String name = parts.get(1);
 							String code = parts.get(2);
-							String actualCode = RedisWrapper.getAuthCodeImpl(name, GlobalJedisConfig.newJedis());
-							if (actualCode != null && actualCode.equals(code) &&
-									RedisWrapper.bindAccountImpl(name,
-											e.getSender().getId(),
-											Objects.requireNonNull(GlobalJedisConfig.newJedis())
-									)
-							) { e.getSubject().sendMessage(String.format("玩家 %s 验证成功", name));
+							final Jedis jedis = GlobalJedisConfig.newJedis();
+							Objects.requireNonNull(jedis);
+							String actualCode = RedisImpl.getAuthCodeImpl(name, jedis);
+							jedis.resetState();
+
+							if (actualCode != null) {
+								if (actualCode.equals(code) && RedisImpl.bindAccountImpl(name, e.getSender().getId(), jedis)) {
+									subject.sendMessage(String.format("Authorization to %s success", name));
+									jedis.resetState();
+									RedisImpl.removeAuthCodeImpl(name, jedis);
+								} else {
+									subject.sendMessage(String.format("Authorization to %s failed(code invalid)", name));
+								}
 							} else {
-								e.getSubject().sendMessage(String.format("玩家 %s 验证失败", name));
+								subject.sendMessage(String.format("Authorization to %s failed(player not exists)", name));
 							}
+							jedis.close();
+						} else {
+							subject.sendMessage("Usage: /verify <name> <code>");
 						}
 					}
 				}
-			});
-		});
+			}
+		}));
 
 		this.bot.getEventChannel().subscribeAlways(BotOfflineEvent.class, (e) -> {
 			this.getLogger().info("机器人掉线");
+			this.pool.shutdownNow();
 			System.exit(1);
 		});
 

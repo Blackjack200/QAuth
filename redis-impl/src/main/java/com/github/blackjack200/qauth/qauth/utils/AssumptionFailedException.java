@@ -1,4 +1,4 @@
-package com.github.blackjack200.utils;
+package com.github.blackjack200.qauth.qauth.utils;
 
 /**
  * This exception should be thrown in places where something is assumed to be true, but the type system does not provide

@@ -12,6 +12,7 @@
         <module>nukkit-plugin</module>
         <module>redis-api</module>
         <module>mirai-bot</module>
+        <module>redis-impl</module>
     </modules>
 
     <properties>

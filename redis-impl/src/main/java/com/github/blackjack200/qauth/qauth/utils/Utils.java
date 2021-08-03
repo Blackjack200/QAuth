@@ -1,4 +1,4 @@
-package com.github.blackjack200.utils;
+package com.github.blackjack200.qauth.qauth.utils;
 
 import lombok.experimental.UtilityClass;
 

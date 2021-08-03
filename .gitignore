@@ -11,3 +11,7 @@ buildNumber.properties
 .mvn/wrapper/maven-wrapper.jar
 .idea
 *.iml
+config.json
+device.json
+redis.json
+cache

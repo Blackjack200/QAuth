@@ -1,6 +1,6 @@
-package com.github.blackjack200.utils;
+package com.github.blackjack200.qauth.utils;
 
-import com.github.blackjack200.GlobalJedisConfig;
+import com.github.blackjack200.qauth.qauth.GlobalJedisConfig;
 import cn.nukkit.Server;
 import cn.nukkit.scheduler.AsyncTask;
 import cn.nukkit.utils.MainLogger;

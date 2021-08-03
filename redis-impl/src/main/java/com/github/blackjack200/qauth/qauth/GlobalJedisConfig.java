@@ -1,7 +1,7 @@
-package com.github.blackjack200;
+package com.github.blackjack200.qauth.qauth;
 
-import com.github.blackjack200.utils.AssumptionFailedException;
-import com.github.blackjack200.utils.Utils;
+import com.github.blackjack200.qauth.qauth.utils.AssumptionFailedException;
+import com.github.blackjack200.qauth.qauth.utils.Utils;
 import lombok.NonNull;
 import redis.clients.jedis.Jedis;
 

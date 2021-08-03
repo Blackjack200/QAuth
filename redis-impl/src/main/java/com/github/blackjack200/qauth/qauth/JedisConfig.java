@@ -1,8 +1,8 @@
-package com.github.blackjack200;
+package com.github.blackjack200.qauth.qauth;
 
-import com.github.blackjack200.utils.AssumptionFailedException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.blackjack200.qauth.qauth.utils.AssumptionFailedException;
 import lombok.Getter;
 import lombok.NonNull;
 

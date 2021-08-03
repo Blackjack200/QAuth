@@ -1,4 +1,4 @@
-package com.github.blackjack200.utils;
+package com.github.blackjack200.qauth.utils;
 
 import cn.nukkit.Server;
 import lombok.Getter;
