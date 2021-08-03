@@ -13,7 +13,7 @@ QQ群: 876432774
 
 配置好和 [mirai要求](https://github.com/mamoe/mirai/blob/dev/docs/Preparations.md#mirai---preparations) 一致的java环境和maven后
 
-使用`mvn clean package`编译项目
+使用`mvn clean package`编译项目 或者在 Github Release下载最新构建
 
 在子项目target文件夹内有生成的jar
 
@@ -35,8 +35,5 @@ QQ群: 876432774
 
 ### 什么不会你还不会吧
 
-1. 寻求其他开发者帮助
-2. 别用这插件了, 这插件不适合你
-3. 搜索引擎是你的好朋友
-4. 不要去issue那里提无价值的问题
-5. 有可能我乐意帮你 QQ群876432774
+1. 搜索引擎是你的好朋友
+2. 有可能我乐意帮你 QQ群876432774
