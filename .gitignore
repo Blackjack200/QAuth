@@ -15,3 +15,4 @@ config.json
 device.json
 redis.json
 cache
+.DS_Store
