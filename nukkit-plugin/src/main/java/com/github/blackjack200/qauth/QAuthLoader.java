@@ -22,6 +22,7 @@ public class QAuthLoader extends PluginBase {
 		instance = this;
 		this.saveResource("redis.json");
 		this.saveResource("config.json");
+		this.saveResource("LICENSE");
 		Config cfg = new Config(FileUtil.file(this.getDataFolder(), "config.json"), Config.DETECT);
 		kickMessage = cfg.getString("kick_message");
 		timeout = cfg.getLong("timeout");
