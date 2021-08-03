@@ -24,6 +24,8 @@ __STFW(Search the fucking web)__
 
 生成的config.json和redis.json可修改自定义内容
 
+用法是到特定群聊(config.json)发送`/verify <id> <code>`
+
 ### 安装Nukkit插件
 
 没有jar就去看上上步
