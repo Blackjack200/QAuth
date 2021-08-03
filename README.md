@@ -7,7 +7,7 @@ QQ群: 876432774
 
 ### 部署Redis
 
-__STFW(Search the fucking web)__
+搜索引擎搜索即可
 
 ### 编译项目
 
