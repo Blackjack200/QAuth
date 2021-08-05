@@ -100,8 +100,9 @@ public class BotServer {
 							Objects.requireNonNull(jedis);
 							String actualCode = RedisImpl.getAuthCodeImpl(name, jedis);
 
-
-							if (actualCode != null) {
+							if (RedisImpl.hasBindAccountImpl(name, jedis)) {
+								subject.sendMessage(String.format("玩家 %s 已通过验证", name));
+							} else if (actualCode != null) {
 								if (actualCode.equals(code) && RedisImpl.bindAccountImpl(name, e.getSender().getId(), jedis)) {
 									subject.sendMessage(String.format("玩家 %s 验证成功", name));
 

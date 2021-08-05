@@ -40,13 +40,13 @@ public class RedisImpl {
 	}
 
 	public void setAuthCodeImpl(String name, String code, Jedis jedis, long timeout) {
-		final String key = "account_code:" + name;
+		final String key = "account_captcha:" + name;
 		jedis.set(key, code);
 		jedis.expire(key, timeout);
 	}
 
 	public String getAuthCodeImpl(String name, Jedis jedis) {
-		return jedis.get("account_code:" + name);
+		return jedis.get("account_captcha:" + name);
 	}
 
 	public boolean hasAuthCode(String name, Jedis jedis) {
@@ -54,6 +54,6 @@ public class RedisImpl {
 	}
 
 	public void removeAuthCodeImpl(String name, Jedis jedis) {
-		jedis.del("account_code:" + name);
+		jedis.del("account_captcha:" + name);
 	}
 }
